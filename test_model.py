@@ -8,7 +8,7 @@ def get_model():
     return multi_unet_model(n_classes=n_classes, IMG_HEIGHT=256, IMG_WIDTH=512, IMG_CHANNELS=1)
 
 model = get_model()
-model.load_weights('/bess25/jskim/semantic_segmentation/U-net_colab/cityscape_all.hdf5')
+model.load_weights('/bess25/jskim/semantic_segmentation/U-net_colab/230626cityscape_all.hdf5')
 
 source_path = '/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/230626source/'
 X_test = np.load(source_path + 'X_test.npy')
@@ -24,7 +24,6 @@ IOU_keras = MeanIoU(num_classes=n_classes)
 IOU_keras.update_state(y_test[:,:,:,0], y_pred_argmax)
 print("Mean IoU =", IOU_keras.result().numpy())
 
-
 #To calculate I0U for each class...
 values = np.array(IOU_keras.get_weights()).reshape(n_classes, n_classes)
 print(values)
@@ -33,10 +32,10 @@ class2_IoU = values[1,1]/(values[1,1] + values[1,0] + values[1,2] + values[1,3] 
 class3_IoU = values[2,2]/(values[2,2] + values[2,0] + values[2,1] + values[2,3] + values[0,2]+ values[1,2]+ values[3,2])
 class4_IoU = values[3,3]/(values[3,3] + values[3,0] + values[3,1] + values[3,2] + values[0,3]+ values[1,3]+ values[2,3])
 
-print("IoU for class1 is: ", class1_IoU)
-print("IoU for class2 is: ", class2_IoU)
-print("IoU for class3 is: ", class3_IoU)
-print("IoU for class4 is: ", class4_IoU)
+print("IoU for background is: ", class1_IoU)
+print("IoU for vegetation is: ", class2_IoU)
+print("IoU for sidewalk is: ", class3_IoU)
+print("IoU for road is: ", class4_IoU)
 
 # plt.imshow(train_images[0, :,:,0], cmap='gray')
 # plt.imshow(train_masks[0], cmap='gray')
@@ -44,7 +43,7 @@ print("IoU for class4 is: ", class4_IoU)
 #Predict on a few images
 #model = get_model()
 #model.load_eights('???.hdf5') 
-prediction_path = '/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/230626source/'
+prediction_path = '/bess25/jskim/semantic_segmentation/U-net_colab/result/230626predictions'
 for i in range(len(X_test)):
     test_img = X_test[i]
     ground_truth=y_test[i]
@@ -67,4 +66,4 @@ for i in range(len(X_test)):
     plt.title('Prediction on test image')
     plt.imshow(predicted_img, cmap='jet')
     plt.show()
-    # plt.savefig('/bess25/jskim/semantic_segmentation/U-net_colab/result/230623_cityscape_all_prediction.png')
+    plt.savefig('/bess25/jskim/semantic_segmentation/U-net_colab/result/230626_cityscape_all_prediction.png')
