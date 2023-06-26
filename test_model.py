@@ -66,4 +66,4 @@ for i in range(len(X_test)):
     plt.title('Prediction on test image')
     plt.imshow(predicted_img, cmap='jet')
     plt.show()
-    plt.savefig(f'/bess25/jskim/semantic_segmentation/U-net_colab/result/figure/230626_prediction{i}.png')
+    plt.savefig(f'/bess25/jskim/semantic_segmentation/U-net_colab/result/230626predictions/figure/230626_prediction{i}.png')
