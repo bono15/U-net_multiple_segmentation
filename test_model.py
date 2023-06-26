@@ -43,7 +43,8 @@ print("IoU for class4 is: ", class4_IoU)
 
 #Predict on a few images
 #model = get_model()
-#model.load_weights('???.hdf5')  
+#model.load_eights('???.hdf5') 
+prediction_path = '/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/230626source/'
 for i in range(len(X_test)):
     test_img = X_test[i]
     ground_truth=y_test[i]
@@ -54,6 +55,8 @@ for i in range(len(X_test)):
 
 
     # np.save
+    
+    np.save(source_path + 'X_test.npy', X_test)
 
 
     plt.figure(figsize=(24, 8))

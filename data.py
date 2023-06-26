@@ -61,11 +61,10 @@ class data_loader():
         train_masks_input = np.expand_dims(train_masks_encoded_original_shape, axis=3)
 
 
-
         #Create a subset of data for quick testing
         #Picking 10% for testing and remaining for training
         from sklearn.model_selection import train_test_split #>scikit learn은 데이터 분석 툴, train_test_split라는 기능이 있음. X는 데이터, y는 레이블. 
-        X1, X_test, y1, y_test = train_test_split(train_images, train_masks_input, test_size = 0.10, random_state = 0)
+        X1, X_test, y1, y_test = train_test_split(train_images, train_masks_input, test_size = 0.10, random_state = 0) #기본적으로 shuffle=True
 
         #Further split training data to a smaller subset for quick testing of models
         X_train, X_do_not_use, y_train, y_do_not_use = train_test_split(X1, y1, test_size = 0.2, random_state = 0)
@@ -84,16 +83,6 @@ class data_loader():
 
         ###############################################################
         
-
-        # source_path = '/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/230623source/'
-        # np.save(source_path + 'X_train.npy', X_train)
-        # np.save(source_path + 'X_test.npy', X_test)
-        # np.save(source_path + 'y_train.npy', y_train)
-        # np.save(source_path + 'y_test.npy', y_test)
-        # np.save(source_path + 'y_train_cat.npy', y_train_cat)
-        # np.save(source_path + 'y_test_cat.npy', y_test_cat)
-
-
         self.class_weights = class_weight.compute_class_weight(class_weight='balanced', 
                                                         classes=np.unique(train_masks_reshaped_encoded), 
                                                         y=train_masks_reshaped_encoded)
@@ -108,29 +97,6 @@ class data_loader():
         self.IMG_HEIGHT = IMG_HEIGHT
         self.IMG_WIDTH = IMG_WIDTH
         self.IMG_CHANNELS = IMG_CHANNELS
-
-        # def get_model():
-        #     return multi_unet_model(n_classes=n_classes, IMG_HEIGHT=IMG_HEIGHT, IMG_WIDTH=IMG_WIDTH, IMG_CHANNELS=IMG_CHANNELS)
-
-        # model = get_model()
-        # model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-        # model.summary()
-
-        # print(model.summary())
-
-        # history = model.fit(X_train, y_train_cat, 
-        #                     batch_size = 16, 
-        #                     verbose=1, 
-        #                     epochs=50, 
-        #                     validation_data=(X_test, y_test_cat), 
-        #                     # class_weight=class_weights, #이미지따라
-        #                     shuffle=False)
-                        
-        # model.save('/bess25/jskim/semantic_segmentation/U-net_colab/cityscape_all.hdf5')
-
-
-        # #model = get_model()
-        # model.load_weights('/bess25/jskim/semantic_segmentation/U-net_colab/cityscape_all.hdf5')  
 
         # #IOU
         # y_pred=model.predict(X_test)
