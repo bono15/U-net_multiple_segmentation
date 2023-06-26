@@ -10,7 +10,7 @@ def get_model():
 model = get_model()
 model.load_weights('/bess25/jskim/semantic_segmentation/U-net_colab/cityscape_all.hdf5')
 
-source_path = '/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/230623source/'
+source_path = '/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/230626source/'
 X_test = np.load(source_path + 'X_test.npy')
 y_test = np.load(source_path + 'y_test.npy')
 
@@ -53,13 +53,10 @@ for i in range(len(X_test)):
     prediction = (model.predict(test_img_input))
     predicted_img=np.argmax(prediction, axis=3)[0,:,:]
 
-
     # np.save
-    
-    np.save(source_path + 'X_test.npy', X_test)
+    np.save(prediction_path + f'prediction{i}.npy', predicted_img)
 
-
-    plt.figure(figsize=(24, 8))
+    plt.figure(figsize=(12, 4))
     plt.subplot(231)
     plt.title('Testing Image')
     plt.imshow(test_img[:,:,0], cmap='gray')
