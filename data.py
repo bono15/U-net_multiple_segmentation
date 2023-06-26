@@ -1,5 +1,4 @@
 from simple_multi_unet_model import multi_unet_model #Uses softmax 
-# jskim
 from PIL import Image
 from tensorflow.keras.utils import normalize
 import os
