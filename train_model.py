@@ -32,7 +32,7 @@ if __name__ == '__main__':
     history = model.fit(X_train, y_train_cat, 
                         batch_size = 16, 
                         verbose=1, 
-                        epochs=300, 
+                        epochs=100, 
                         validation_data=(X_test, y_test_cat), 
                         # class_weight=class_weights, #이미지따라
                         shuffle=False)
