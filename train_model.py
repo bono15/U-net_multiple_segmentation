@@ -1,121 +1,70 @@
-from data import train_model
+from data import data_loader
 import numpy as np
 import os
 from matplotlib import pyplot as plt
+from simple_multi_unet_model import multi_unet_model
 
-source_path = '/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/230623source/'
-X_train = np.load(source_path + 'X_train.npy')
-X_test = np.load(source_path + 'X_test.npy')
-y_train = np.load(source_path + 'y_train.npy')
-y_test = np.load(source_path + 'y_test.npy')
-y_train_cat = np.load(source_path + 'y_train_cat.npy')
-y_test_cat = np.load(source_path + 'y_test_cat.npy')
-
-# def train_model(X_train, y_train_cat, X_test, y_test_cat, model):
-#     history = model.fit(X_train, y_train_cat, 
-#                     batch_size = 16, 
-#                     verbose=1, 
-#                     epochs=50, 
-#                     validation_data=(X_test, y_test_cat), 
-#                     # class_weight=class_weights, #이미지따라
-#                     shuffle=False)
-#     return model, history
 n_classes=4
 
-model, class_weights = train_model(X_train, y_train, n_classes)
-
-history = model.fit(X_train, y_train_cat, 
-                    batch_size = 16, 
-                    verbose=1, 
-                    epochs=50, 
-                    validation_data=(X_test, y_test_cat), 
-                    # class_weight=class_weights, #이미지따라
-                    shuffle=False)
-                   
-model.save('/bess25/jskim/semantic_segmentation/U-net_colab/230623_cityscape_all.hdf5')
-
-#Evaluate the model
-	# evaluate model
-_, acc = model.evaluate(X_test, y_test_cat)
-print("Accuracy is = ", (acc * 100.0), "%")
-
-#plot the training and validation accuracy and loss at each epoch
-loss = history.history['loss']
-val_loss = history.history['val_loss']
-epochs = range(1, len(loss) + 1)
-plt.plot(epochs, loss, 'y', label='Training loss')
-plt.plot(epochs, val_loss, 'r', label='Validation loss')
-plt.title('Training and validation loss')
-plt.xlabel('Epochs')
-plt.ylabel('Loss')
-plt.legend()
-plt.savefig('/bess25/jskim/semantic_segmentation/U-net_colab/result/230623_cityscape_all_loss.png')
-plt.show()
-
-acc = history.history['accuracy']
-val_acc = history.history['val_accuracy']
-
-plt.plot(epochs, acc, 'y', label='Training Accuracy')
-plt.plot(epochs, val_acc, 'r', label='Validation Accuracy')
-plt.title('Training and validation Accuracy')
-plt.xlabel('Epochs')
-plt.ylabel('Accuracy')
-plt.legend()
-plt.savefig('/bess25/jskim/semantic_segmentation/U-net_colab/result/230623_cityscape_all_accuracy.png')
-plt.show()
-
-#model = get_model()
-model.load_weights('/bess25/jskim/semantic_segmentation/U-net_colab/230623_cityscape_all.hdf5')
-
-#IOU
-y_pred=model.predict(X_test)
-y_pred_argmax=np.argmax(y_pred, axis=3)
-
-#Using built in keras function
-from keras.metrics import MeanIoU
-n_classes = 4
-IOU_keras = MeanIoU(num_classes=n_classes)  
-IOU_keras.update_state(y_test[:,:,:,0], y_pred_argmax)
-print("Mean IoU =", IOU_keras.result().numpy())
+if __name__ == '__main__':
+    # source_path = '/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/230623source/'
+    img_path  ="/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/image_grayscale"
+    mask_path = "/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/mask_4classes"
+    data_loader = data_loader(img_path,mask_path)
+    X_train,X_test,y_train,y_test,y_train_cat,y_test_cat,test_img_input,ground_truth = data_loader.dataload()
 
 
-#To calculate I0U for each class...
-values = np.array(IOU_keras.get_weights()).reshape(n_classes, n_classes)
-print(values)
-class1_IoU = values[0,0]/(values[0,0] + values[0,1] + values[0,2] + values[0,3] + values[1,0]+ values[2,0]+ values[3,0])
-class2_IoU = values[1,1]/(values[1,1] + values[1,0] + values[1,2] + values[1,3] + values[0,1]+ values[2,1]+ values[3,1])
-class3_IoU = values[2,2]/(values[2,2] + values[2,0] + values[2,1] + values[2,3] + values[0,2]+ values[1,2]+ values[3,2])
-class4_IoU = values[3,3]/(values[3,3] + values[3,0] + values[3,1] + values[3,2] + values[0,3]+ values[1,3]+ values[2,3])
+    # Save X_test, y_test
+    source_path = '/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/230623source/'
+    np.save(source_path + 'X_test.npy', X_test)
 
-print("IoU for class1 is: ", class1_IoU)
-print("IoU for class2 is: ", class2_IoU)
-print("IoU for class3 is: ", class3_IoU)
-print("IoU for class4 is: ", class4_IoU)
 
-# plt.imshow(train_images[0, :,:,0], cmap='gray')
-# plt.imshow(train_masks[0], cmap='gray')
+    class_weights = data_loader.class_weights
+    IMG_HEIGHT,IMG_WIDTH,IMG_CHANNELS = data_loader.IMG_HEIGHT,data_loader.IMG_WIDTH,data_loader.IMG_CHANNELS
 
-#Predict on a few images
-#model = get_model()
-#model.load_weights('???.hdf5')  
-import random
-test_img_number = random.randint(0, len(X_test))
-test_img = X_test[test_img_number]
-ground_truth=y_test[test_img_number]
-test_img_norm=test_img[:,:,0][:,:,None]
-test_img_input=np.expand_dims(test_img_norm, 0)
-prediction = (model.predict(test_img_input))
-predicted_img=np.argmax(prediction, axis=3)[0,:,:]
+    def get_model():
+        return multi_unet_model(n_classes=n_classes, IMG_HEIGHT=IMG_HEIGHT, IMG_WIDTH=IMG_WIDTH, IMG_CHANNELS=IMG_CHANNELS)
 
-plt.figure(figsize=(12, 8))
-plt.subplot(231)
-plt.title('Testing Image')
-plt.imshow(test_img[:,:,0], cmap='gray')
-plt.subplot(232)
-plt.title('Testing Label')
-plt.imshow(ground_truth[:,:,0], cmap='jet')
-plt.subplot(233)
-plt.title('Prediction on test image')
-plt.imshow(predicted_img, cmap='jet')
-plt.savefig('/bess25/jskim/semantic_segmentation/U-net_colab/result/230623_cityscape_all_prediction.png')
-plt.show()
+    model = get_model()
+    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+    print(model.summary())
+
+    history = model.fit(X_train, y_train_cat, 
+                        batch_size = 16, 
+                        verbose=1, 
+                        epochs=300, 
+                        validation_data=(X_test, y_test_cat), 
+                        # class_weight=class_weights, #이미지따라
+                        shuffle=False)
+                    
+    model.save('/bess25/jskim/semantic_segmentation/U-net_colab/230626_cityscape_all.hdf5')
+
+    #Evaluate the model
+    _, acc = model.evaluate(X_test, y_test_cat)
+    print("Accuracy is = ", (acc * 100.0), "%")
+
+    #plot the training and validation accuracy and loss at each epoch
+    loss = history.history['loss']
+    val_loss = history.history['val_loss']
+    epochs = range(1, len(loss) + 1)
+    plt.plot(epochs, loss, 'y', label='Training loss')
+    plt.plot(epochs, val_loss, 'r', label='Validation loss')
+    plt.title('Training and validation loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.savefig('/bess25/jskim/semantic_segmentation/U-net_colab/result/230623_cityscape_all_loss.png')
+    plt.show()
+
+    acc = history.history['accuracy']
+    val_acc = history.history['val_accuracy']
+
+    plt.plot(epochs, acc, 'y', label='Training Accuracy')
+    plt.plot(epochs, val_acc, 'r', label='Validation Accuracy')
+    plt.title('Training and validation Accuracy')
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.legend()
+    plt.savefig('/bess25/jskim/semantic_segmentation/U-net_colab/result/230623_cityscape_all_accuracy.png')
+    plt.show()
+
