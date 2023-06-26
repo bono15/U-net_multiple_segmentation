@@ -43,7 +43,7 @@ print("IoU for road is: ", class4_IoU)
 #Predict on a few images
 #model = get_model()
 #model.load_eights('???.hdf5') 
-prediction_path = '/bess25/jskim/semantic_segmentation/U-net_colab/result/230626predictions'
+prediction_path = '/bess25/jskim/semantic_segmentation/U-net_colab/result/230626predictions/array'
 for i in range(len(X_test)):
     test_img = X_test[i]
     ground_truth=y_test[i]
@@ -66,4 +66,4 @@ for i in range(len(X_test)):
     plt.title('Prediction on test image')
     plt.imshow(predicted_img, cmap='jet')
     plt.show()
-    plt.savefig('/bess25/jskim/semantic_segmentation/U-net_colab/result/230626_cityscape_all_prediction.png')
+    plt.savefig(f'/bess25/jskim/semantic_segmentation/U-net_colab/result/figure/230626_prediction{i}.png')
