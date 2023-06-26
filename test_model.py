@@ -8,7 +8,7 @@ def get_model():
     return multi_unet_model(n_classes=n_classes, IMG_HEIGHT=256, IMG_WIDTH=512, IMG_CHANNELS=1)
 
 model = get_model()
-model.load_weights('/bess25/jskim/semantic_segmentation/U-net_colab/230626cityscape_all.hdf5')
+model.load_weights('/bess25/jskim/semantic_segmentation/U-net_colab/230626_cityscape_all.hdf5')
 
 source_path = '/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/230626source/'
 X_test = np.load(source_path + 'X_test.npy')
