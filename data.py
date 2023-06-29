@@ -24,11 +24,14 @@ class data_loader():
 
         #Capture training image info as a list
         train_images = []
+        img_file_names = []
         directory_path=self.img_path
         for img in glob.glob(os.path.join(directory_path, "*.png")):
+            img_image = os.path.basename(img)
             img = cv2.imread(img, 0)       
             #img = cv2.resize(img, (SIZE_Y, SIZE_X))
             train_images.append(img)
+            img_file_names.append(img_image)  
             
         #Convert list to array for machine learning processing        
         train_images = np.array(train_images)
@@ -64,7 +67,7 @@ class data_loader():
         #Create a subset of data for quick testing
         #Picking 10% for testing and remaining for training
         from sklearn.model_selection import train_test_split #>scikit learn은 데이터 분석 툴, train_test_split라는 기능이 있음. X는 데이터, y는 레이블. 
-        X1, X_test, y1, y_test = train_test_split(train_images, train_masks_input, test_size = 0.10, random_state = 0) #기본적으로 shuffle=True
+        X1, X_test, y1, y_test, train_names, test_names = train_test_split(train_images, train_masks_input, img_file_names, test_size = 0.10, random_state = 0) #기본적으로 shuffle=True
 
         #Further split training data to a smaller subset for quick testing of models
         X_train, X_do_not_use, y_train, y_do_not_use = train_test_split(X1, y1, test_size = 0.2, random_state = 0)
@@ -113,4 +116,10 @@ class data_loader():
         test_img_input=np.expand_dims(test_img_norm, 0)
         # prediction = (model.predict(test_img_input))
         # predicted_img=np.argmax(prediction, axis=3)[0,:,:]
+
+
+
+
+
+
         return X_train,X_test,y_train,y_test,y_train_cat,y_test_cat,test_img_input,ground_truth
