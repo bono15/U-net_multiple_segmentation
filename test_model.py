@@ -1,6 +1,7 @@
 from simple_multi_unet_model import multi_unet_model
 import numpy as np
 from matplotlib import pyplot as plt
+import os
 
 n_classes = 4
 
@@ -43,7 +44,8 @@ print("IoU for road is: ", class4_IoU)
 #Predict on a few images
 #model = get_model()
 #model.load_eights('???.hdf5') 
-prediction_path = '/bess25/jskim/semantic_segmentation/U-net_colab/result/230626predictions/array'
+prediction_path = '/bess25/jskim/semantic_segmentation/U-net_colab/result/230629predictions/array'
+figure_path = '/bess25/jskim/semantic_segmentation/U-net_colab/result/230629predictions/figure'
 for i in range(len(X_test)):
     test_img = X_test[i]
     ground_truth=y_test[i]
@@ -53,7 +55,7 @@ for i in range(len(X_test)):
     predicted_img=np.argmax(prediction, axis=3)[0,:,:]
 
     # np.save
-    np.save(prediction_path + f'prediction{i}.npy', predicted_img)
+    np.save(os.path.join(prediction_path, f'prediction{i}.npy'), predicted_img)
 
     plt.figure(figsize=(12, 4))
     plt.subplot(231)
@@ -66,4 +68,4 @@ for i in range(len(X_test)):
     plt.title('Prediction on test image')
     plt.imshow(predicted_img, cmap='jet')
     plt.show()
-    plt.savefig(f'/bess25/jskim/semantic_segmentation/U-net_colab/result/230626predictions/figure/230626_prediction{i}.png')
+    plt.savefig(os.path.join(figure_path, f'prediction{i}.png'))
