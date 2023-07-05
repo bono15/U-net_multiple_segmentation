@@ -14,7 +14,8 @@ model.load_weights('/bess25/jskim/semantic_segmentation/U-net_colab/230705_citys
 source_path = '/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/230705source/'
 X_test = np.load(source_path + 'X_test.npy')
 y_test = np.load(source_path + 'y_test.npy')
-names_test = np.load(source_patah + 'names_test.npy')
+with open('names_test.pkl', 'rb') as f:
+    names_test = pickle.load(f)
 
 #IOU
 y_pred=model.predict(X_test)

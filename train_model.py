@@ -1,6 +1,7 @@
 from data import data_loader
 import numpy as np
 import os
+import pickle
 from matplotlib import pyplot as plt
 from simple_multi_unet_model import multi_unet_model
 
@@ -17,7 +18,10 @@ if __name__ == '__main__':
     source_path = '/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/230705source/'
     np.save(source_path + 'X_test.npy', X_test)
     np.save(source_path + 'y_test.npy', y_test)
-    np.save(source_path + 'names_test.npy', names_test)
+
+    # Save names_test
+    with open('names_test.pkl', 'wb') as f:
+        pickle.dump(names_test, f)
 
     class_weights = data_loader.class_weights
     IMG_HEIGHT,IMG_WIDTH,IMG_CHANNELS = data_loader.IMG_HEIGHT,data_loader.IMG_WIDTH,data_loader.IMG_CHANNELS
