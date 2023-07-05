@@ -2,6 +2,7 @@ from simple_multi_unet_model import multi_unet_model
 import numpy as np
 from matplotlib import pyplot as plt
 import os
+import pickle
 
 n_classes = 4
 
@@ -57,8 +58,12 @@ for i in range(len(X_test)):
     prediction = (model.predict(test_img_input))
     predicted_img=np.argmax(prediction, axis=3)[0,:,:]
 
+
+    # Remove extension from filename
+    name = names_test[i].split(".")[0]
+
     # np.save
-    np.save(os.path.join(prediction_path, f'{names_test[i]}.npy'), predicted_img)
+    np.save(os.path.join(prediction_path, f'{name}.npy'), predicted_img)
 
     plt.figure(figsize=(12, 4))
     plt.subplot(231)
@@ -71,4 +76,4 @@ for i in range(len(X_test)):
     plt.title('Prediction on test image')
     plt.imshow(predicted_img, cmap='jet')
     # plt.show()
-    plt.savefig(os.path.join(figure_path, f'prediction_{names_test[i]}.png'))
+    plt.savefig(os.path.join(figure_path, f'prediction_{name}.png'))
