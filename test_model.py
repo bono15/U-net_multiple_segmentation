@@ -9,11 +9,12 @@ def get_model():
     return multi_unet_model(n_classes=n_classes, IMG_HEIGHT=256, IMG_WIDTH=512, IMG_CHANNELS=1)
 
 model = get_model()
-model.load_weights('/bess25/jskim/semantic_segmentation/U-net_colab/230626_cityscape_all.hdf5')
+model.load_weights('/bess25/jskim/semantic_segmentation/U-net_colab/230705_cityscape_all.hdf5')
 
-source_path = '/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/230626source/'
+source_path = '/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/230705source/'
 X_test = np.load(source_path + 'X_test.npy')
 y_test = np.load(source_path + 'y_test.npy')
+names_test = np.load(source_patah + 'names_test.npy')
 
 #IOU
 y_pred=model.predict(X_test)
@@ -44,10 +45,11 @@ print("IoU for road is: ", class4_IoU)
 #Predict on a few images
 #model = get_model()
 #model.load_eights('???.hdf5') 
-prediction_path = '/bess25/jskim/semantic_segmentation/U-net_colab/result/230629predictions/array'
-figure_path = '/bess25/jskim/semantic_segmentation/U-net_colab/result/230629predictions/figure'
+prediction_path = '/bess25/jskim/semantic_segmentation/U-net_colab/result/230705predictions/array'
+figure_path = '/bess25/jskim/semantic_segmentation/U-net_colab/result/230705predictions/figure'
 for i in range(len(X_test)):
     test_img = X_test[i]
+    print(test_img)
     ground_truth=y_test[i]
     test_img_norm=test_img[:,:,0][:,:,None]
     test_img_input=np.expand_dims(test_img_norm, 0)
@@ -55,7 +57,7 @@ for i in range(len(X_test)):
     predicted_img=np.argmax(prediction, axis=3)[0,:,:]
 
     # np.save
-    np.save(os.path.join(prediction_path, f'prediction{i}.npy'), predicted_img)
+    np.save(os.path.join(prediction_path, f'{names_test[i]}.npy'), predicted_img)
 
     plt.figure(figsize=(12, 4))
     plt.subplot(231)
@@ -67,5 +69,5 @@ for i in range(len(X_test)):
     plt.subplot(233)
     plt.title('Prediction on test image')
     plt.imshow(predicted_img, cmap='jet')
-    plt.show()
-    plt.savefig(os.path.join(figure_path, f'prediction{i}.png'))
+    # plt.show()
+    plt.savefig(os.path.join(figure_path, f'prediction_{names_test[i]}.png'))

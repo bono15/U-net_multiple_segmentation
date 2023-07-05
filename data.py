@@ -67,10 +67,10 @@ class data_loader():
         #Create a subset of data for quick testing
         #Picking 10% for testing and remaining for training
         from sklearn.model_selection import train_test_split #>scikit learn은 데이터 분석 툴, train_test_split라는 기능이 있음. X는 데이터, y는 레이블. 
-        X1, X_test, y1, y_test, train_names, test_names = train_test_split(train_images, train_masks_input, img_file_names, test_size = 0.10, random_state = 0) #기본적으로 shuffle=True
-
+        X1, X_test, y1, y_test, names, names_test = train_test_split(train_images, train_masks_input, img_file_names, test_size = 0.10, random_state = 0) #기본적으로 shuffle=True
+    
         #Further split training data to a smaller subset for quick testing of models
-        X_train, X_do_not_use, y_train, y_do_not_use = train_test_split(X1, y1, test_size = 0.2, random_state = 0)
+        X_train, X_do_not_use, y_train, y_do_not_use, names_train, names_do_not_use  = train_test_split(X1, y1, names, test_size = 0.2, random_state = 0)
 
         print("Class values in the dataset are ... ", np.unique(y_train))  # 0 is the background/few unlabeled 
 
@@ -122,4 +122,4 @@ class data_loader():
 
 
 
-        return X_train,X_test,y_train,y_test,y_train_cat,y_test_cat,test_img_input,ground_truth
+        return X_train,X_test,y_train,y_test,y_train_cat,y_test_cat,test_img_input,ground_truth,names_train,names_test
