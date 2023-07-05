@@ -7,17 +7,17 @@ from simple_multi_unet_model import multi_unet_model
 n_classes=4
 
 if __name__ == '__main__':
-    # source_path = '/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/230623source/'
     img_path  ="/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/image_grayscale"
     mask_path = "/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/mask_4classes"
     data_loader = data_loader(img_path,mask_path)
-    X_train,X_test,y_train,y_test,y_train_cat,y_test_cat,test_img_input,ground_truth = data_loader.dataload()
+    X_train,X_test,y_train,y_test,y_train_cat,y_test_cat,test_img_input,ground_truth,names_train,names_test = data_loader.dataload()
 
 
     # Save X_test, y_test
-    source_path = '/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/230626source/'
+    source_path = '/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/230705source/'
     np.save(source_path + 'X_test.npy', X_test)
     np.save(source_path + 'y_test.npy', y_test)
+    np.save(source_path + 'names_test.npy', names_test)
 
     class_weights = data_loader.class_weights
     IMG_HEIGHT,IMG_WIDTH,IMG_CHANNELS = data_loader.IMG_HEIGHT,data_loader.IMG_WIDTH,data_loader.IMG_CHANNELS
@@ -32,12 +32,12 @@ if __name__ == '__main__':
     history = model.fit(X_train, y_train_cat, 
                         batch_size = 16, 
                         verbose=1, 
-                        epochs=100, 
+                        epochs=50, 
                         validation_data=(X_test, y_test_cat), 
                         # class_weight=class_weights, #이미지따라
                         shuffle=False)
                     
-    model.save('/bess25/jskim/semantic_segmentation/U-net_colab/230626_cityscape_all.hdf5')
+    model.save('/bess25/jskim/semantic_segmentation/U-net_colab/230705_cityscape_all.hdf5')
 
     #Evaluate the model
     _, acc = model.evaluate(X_test, y_test_cat)
@@ -53,7 +53,7 @@ if __name__ == '__main__':
     plt.xlabel('Epochs')
     plt.ylabel('Loss')
     plt.legend()
-    plt.savefig('/bess25/jskim/semantic_segmentation/U-net_colab/result/230626_cityscape_all_loss.png')
+    plt.savefig('/bess25/jskim/semantic_segmentation/U-net_colab/result/230705_cityscape_all_loss.png')
     plt.show()
 
     acc = history.history['accuracy']
@@ -65,6 +65,6 @@ if __name__ == '__main__':
     plt.xlabel('Epochs')
     plt.ylabel('Accuracy')
     plt.legend()
-    plt.savefig('/bess25/jskim/semantic_segmentation/U-net_colab/result/230626_cityscape_all_accuracy.png')
+    plt.savefig('/bess25/jskim/semantic_segmentation/U-net_colab/result/230705_cityscape_all_accuracy.png')
     plt.show()
 
