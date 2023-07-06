@@ -7,7 +7,7 @@ import pickle
 n_classes = 4
 
 def get_model():
-    return multi_unet_model(n_classes=n_classes, IMG_HEIGHT=256, IMG_WIDTH=512, IMG_CHANNELS=1)
+    return multi_unet_model(n_classes=n_classes, IMG_HEIGHT=256, IMG_WIDTH=512, IMG_CHANNELS=3)
 
 model = get_model()
 model.load_weights('/bess25/jskim/semantic_segmentation/U-net_colab/230706_cityscape_all_rgb.hdf5')
