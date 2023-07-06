@@ -3,7 +3,7 @@ from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, UpSampling2D, c
 
 
 ################################################################
-def multi_unet_model(n_classes=4, IMG_HEIGHT=256, IMG_WIDTH=512, IMG_CHANNELS=1):
+def multi_unet_model(n_classes=4, IMG_HEIGHT=256, IMG_WIDTH=512, IMG_CHANNELS=3):
 #Build the model
     inputs = Input((IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS))
     #s = Lambda(lambda x: x / 255)(inputs)   #No need for this if we normalize our inputs beforehand

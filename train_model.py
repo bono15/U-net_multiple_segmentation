@@ -8,7 +8,7 @@ from simple_multi_unet_model import multi_unet_model
 n_classes=4
 
 if __name__ == '__main__':
-    img_path  ="/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/image_grayscale"
+    img_path  ="/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/image_RGB"
     mask_path = "/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/mask_4classes"
     data_loader = data_loader(img_path,mask_path)
     X_train,X_test,y_train,y_test,y_train_cat,y_test_cat,test_img_input,ground_truth,names_train,names_test = data_loader.dataload()

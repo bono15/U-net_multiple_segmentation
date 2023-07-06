@@ -40,7 +40,7 @@ class data_loader():
         train_masks = [] 
         directory_path= self.mask_path
         for mask in glob.glob(os.path.join(directory_path, "*.png")):
-            mask = cv2.imread(mask, 0)       
+            mask = cv2.imread(mask, 1) #grey 는 0, RGB 1       
             #mask = cv2.resize(mask, (SIZE_Y, SIZE_X), interpolation = cv2.INTER_NEAREST)  #Otherwise ground truth changes due to interpolation
             train_masks.append(mask)
                 
@@ -58,7 +58,7 @@ class data_loader():
         np.unique(train_masks_encoded_original_shape)
 
         #################################################
-        train_images = np.expand_dims(train_images, axis=3) #딥러닝에 맞는 형태로 변형(num_samples, height, width, channels=1)
+        # train_images = np.expand_dims(train_images, axis=3) #딥러닝에 맞는 형태로 변형(num_samples, height, width, channels=1)
         train_images = normalize(train_images, axis=1) #height, width 정보 남기고 눌러줌
 
         train_masks_input = np.expand_dims(train_masks_encoded_original_shape, axis=3)
