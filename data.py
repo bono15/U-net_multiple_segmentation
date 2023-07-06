@@ -28,7 +28,7 @@ class data_loader():
         directory_path=self.img_path
         for img in glob.glob(os.path.join(directory_path, "*.png")):
             img_image = os.path.basename(img)
-            img = cv2.imread(img, 0)       
+            img = cv2.imread(img, 1) #grey 는 0, RGB 1         
             #img = cv2.resize(img, (SIZE_Y, SIZE_X))
             train_images.append(img)
             img_file_names.append(img_image)  
@@ -40,7 +40,7 @@ class data_loader():
         train_masks = [] 
         directory_path= self.mask_path
         for mask in glob.glob(os.path.join(directory_path, "*.png")):
-            mask = cv2.imread(mask, 1) #grey 는 0, RGB 1       
+            mask = cv2.imread(mask, 0)     
             #mask = cv2.resize(mask, (SIZE_Y, SIZE_X), interpolation = cv2.INTER_NEAREST)  #Otherwise ground truth changes due to interpolation
             train_masks.append(mask)
                 
