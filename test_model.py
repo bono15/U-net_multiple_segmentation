@@ -10,9 +10,9 @@ def get_model():
     return multi_unet_model(n_classes=n_classes, IMG_HEIGHT=256, IMG_WIDTH=512, IMG_CHANNELS=1)
 
 model = get_model()
-model.load_weights('/bess25/jskim/semantic_segmentation/U-net_colab/230705_cityscape_all.hdf5')
+model.load_weights('/bess25/jskim/semantic_segmentation/U-net_colab/230706_cityscape_all_rgb.hdf5')
 
-source_path = '/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/230705source/'
+source_path = '/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/230706source/'
 X_test = np.load(source_path + 'X_test.npy')
 y_test = np.load(source_path + 'y_test.npy')
 with open('names_test.pkl', 'rb') as f:
@@ -47,8 +47,8 @@ print("IoU for road is: ", class4_IoU)
 #Predict on a few images
 #model = get_model()
 #model.load_eights('???.hdf5') 
-prediction_path = '/bess25/jskim/semantic_segmentation/U-net_colab/result/230705predictions/array'
-figure_path = '/bess25/jskim/semantic_segmentation/U-net_colab/result/230705predictions/figure'
+prediction_path = '/bess25/jskim/semantic_segmentation/U-net_colab/result/230706predictions/array'
+figure_path = '/bess25/jskim/semantic_segmentation/U-net_colab/result/230706predictions/figure'
 for i in range(len(X_test)):
     test_img = X_test[i]
     print(test_img)
