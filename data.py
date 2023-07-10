@@ -26,26 +26,49 @@ class data_loader():
         train_images = []
         img_file_names = []
         directory_path=self.img_path
-        for img in glob.glob(os.path.join(directory_path, "*.png")):
-            img_image = os.path.basename(img)
-            img = cv2.imread(img, 1) #grey 는 0, RGB 1         
-            #img = cv2.resize(img, (SIZE_Y, SIZE_X))
-            train_images.append(img)
-            img_file_names.append(img_image)  
-            
-        #Convert list to array for machine learning processing        
-        train_images = np.array(train_images)
 
-        #Capture mask/label info as a list
         train_masks = [] 
-        directory_path= self.mask_path
-        for mask in glob.glob(os.path.join(directory_path, "*.png")):
-            mask = cv2.imread(mask, 0)     
-            #mask = cv2.resize(mask, (SIZE_Y, SIZE_X), interpolation = cv2.INTER_NEAREST)  #Otherwise ground truth changes due to interpolation
-            train_masks.append(mask)
-                
-        #Convert list to array for machine learning processing          
+        directory_path_mask= self.mask_path
+
+        for img in sorted(glob.glob(os.path.join(directory_path, "*.png"))):
+            mask_file = os.path.join(directory_path_mask, os.path.basename(img))
+            if os.path.exists(mask_file):
+                img_image = os.path.basename(img)
+                img = cv2.imread(img, 1)           
+                train_images.append(img)
+                img_file_names.append(img_image)  
+
+                mask = cv2.imread(mask_file, 0)     
+                train_masks.append(mask)
+            else:
+                print("Mask not found for image", img)  
+
+        train_images = np.array(train_images)
         train_masks = np.array(train_masks)
+
+        # train_images = []
+        # img_file_names = []
+        # directory_path=self.img_path
+        # for img in sorted(glob.glob(os.path.join(directory_path, "*.png"))):
+        #     img_image = os.path.basename(img)
+        #     img = cv2.imread(img, 1) #grey 는 0, RGB 1         
+        #     #img = cv2.resize(img, (SIZE_Y, SIZE_X))
+        #     train_images.append(img)
+        #     img_file_names.append(img_image)  
+            
+        # #Convert list to array for machine learning processing        
+        # train_images = np.array(train_images)
+
+        # #Capture mask/label info as a list
+        # train_masks = [] 
+        # directory_path= self.mask_path
+        # for mask in sorted(glob.glob(os.path.join(directory_path, "*.png"))):
+        #     mask = cv2.imread(mask, 0)     
+        #     #mask = cv2.resize(mask, (SIZE_Y, SIZE_X), interpolation = cv2.INTER_NEAREST)  #Otherwise ground truth changes due to interpolation
+        #     train_masks.append(mask)
+                
+        # #Convert list to array for machine learning processing          
+        # train_masks = np.array(train_masks)
 
         #Encode labels... but multi dim array so need to flatten, encode and reshape
         
@@ -83,7 +106,7 @@ class data_loader():
         y_test_cat = test_masks_cat.reshape((y_test.shape[0], y_test.shape[1], y_test.shape[2], n_classes))
         print(y_train_cat.shape)
         print(y_test_cat.shape)
-
+        
 
         ###############################################################
         
@@ -117,8 +140,6 @@ class data_loader():
         # test_img_input=np.expand_dims(test_img_norm, 0)
         # prediction = (model.predict(test_img_input))
         # predicted_img=np.argmax(prediction, axis=3)[0,:,:]
-
-
 
 
 

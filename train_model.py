@@ -17,7 +17,7 @@ if __name__ == '__main__':
     # Save X_test, y_test
     source_path = '/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/230710source/'
     np.save(os.path.join(source_path, 'X_test.npy'), X_test)
-    np.save(os.path.join(source_path + 'y_test.npy'), y_test)
+    np.save(os.path.join(source_path, 'y_test.npy'), y_test)
 
     # Save names_test
     with open(os.path.join(source_path, 'names_test.pkl'), 'wb') as f:
