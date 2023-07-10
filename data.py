@@ -59,7 +59,8 @@ class data_loader():
 
         #################################################
         # train_images = np.expand_dims(train_images, axis=3) #딥러닝에 맞는 형태로 변형(num_samples, height, width, channels=1)
-        train_images = normalize(train_images, axis=1) #height, width 정보 남기고 눌러줌
+        # train_images = normalize(train_images, axis=1) #height, width 정보 남기고 눌러줌
+        train_images = train_images.astype('float64') / 255.0
 
         train_masks_input = np.expand_dims(train_masks_encoded_original_shape, axis=3)
 
@@ -108,12 +109,12 @@ class data_loader():
         #Predict on a few images
         #model = get_model()
         #model.load_weights('???.hdf5')  
-        import random
-        test_img_number = random.randint(0, len(X_test))
-        test_img = X_test[test_img_number]
-        ground_truth=y_test[test_img_number]
-        test_img_norm=test_img[:,:,0][:,:,None]
-        test_img_input=np.expand_dims(test_img_norm, 0)
+        # import random
+        # test_img_number = random.randint(0, len(X_test))
+        # test_img = X_test[test_img_number]
+        # ground_truth=y_test[test_img_number]
+        # test_img_norm=test_img[:,:,0][:,:,None]
+        # test_img_input=np.expand_dims(test_img_norm, 0)
         # prediction = (model.predict(test_img_input))
         # predicted_img=np.argmax(prediction, axis=3)[0,:,:]
 
@@ -122,4 +123,4 @@ class data_loader():
 
 
 
-        return X_train,X_test,y_train,y_test,y_train_cat,y_test_cat,test_img_input,ground_truth,names_train,names_test
+        return X_train,X_test,y_train,y_test,y_train_cat,y_test_cat,names_train,names_test

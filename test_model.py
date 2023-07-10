@@ -10,12 +10,12 @@ def get_model():
     return multi_unet_model(n_classes=n_classes, IMG_HEIGHT=256, IMG_WIDTH=512, IMG_CHANNELS=3)
 
 model = get_model()
-model.load_weights('/bess25/jskim/semantic_segmentation/U-net_colab/230706_cityscape_all_rgb.hdf5')
+model.load_weights('/bess25/jskim/semantic_segmentation/U-net_colab/230710_cityscape_all_rgb.hdf5')
 
-source_path = '/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/230706source/'
-X_test = np.load(source_path + 'X_test.npy')
-y_test = np.load(source_path + 'y_test.npy')
-with open('names_test.pkl', 'rb') as f:
+source_path = '/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/230710source/'
+X_test = np.load(os.path.join(source_path,'X_test.npy'))
+y_test = np.load(os.path.join(source_path,'y_test.npy'))
+with open(os.path.join(source_path, 'names_test.pkl'), 'rb') as f:
     names_test = pickle.load(f)
 
 #IOU
@@ -47,16 +47,18 @@ print("IoU for road is: ", class4_IoU)
 #Predict on a few images
 #model = get_model()
 #model.load_eights('???.hdf5') 
-prediction_path = '/bess25/jskim/semantic_segmentation/U-net_colab/result/230706predictions/array'
-figure_path = '/bess25/jskim/semantic_segmentation/U-net_colab/result/230706predictions/figure'
+
+prediction_path = '/bess25/jskim/semantic_segmentation/U-net_colab/result/230710predictions/array'
+figure_path = '/bess25/jskim/semantic_segmentation/U-net_colab/result/230710predictions/figure'
 for i in range(len(X_test)):
     test_img = X_test[i]
     print(test_img)
     ground_truth=y_test[i]
-    test_img_norm=test_img[:,:,0][:,:,None]
-    test_img_input=np.expand_dims(test_img_norm, 0)
+    # test_img_norm=test_img[:,:,0][:,:,None]
+    test_img_input = np.expand_dims(test_img, 0)
     prediction = (model.predict(test_img_input))
     predicted_img=np.argmax(prediction, axis=3)[0,:,:]
+
 
 
     # Remove extension from filename
@@ -68,7 +70,8 @@ for i in range(len(X_test)):
     plt.figure(figsize=(12, 4))
     plt.subplot(231)
     plt.title('Testing Image')
-    plt.imshow(test_img[:,:,0], cmap='gray')
+    # plt.imshow(test_img[:,:,0], cmap='gray')
+    plt.imshow(test_img)
     plt.subplot(232)
     plt.title('Testing Label')
     plt.imshow(ground_truth[:,:,0], cmap='jet')
