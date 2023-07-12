@@ -20,7 +20,7 @@ class data_loader():
         #Resizing images, if needed
         SIZE_X = 512 
         SIZE_Y = 256
-        n_classes=4 #Number of classes for segmentation
+        n_classes=5 #Number of classes for segmentation
 
         #Capture training image info as a list
         train_images = []

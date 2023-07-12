@@ -4,15 +4,15 @@ from matplotlib import pyplot as plt
 import os
 import pickle
 
-n_classes = 4
+n_classes = 5
 
 def get_model():
     return multi_unet_model(n_classes=n_classes, IMG_HEIGHT=256, IMG_WIDTH=512, IMG_CHANNELS=3)
 
 model = get_model()
-model.load_weights('/bess25/jskim/semantic_segmentation/U-net_colab/230710_cityscape_all_rgb.hdf5')
+model.load_weights('/bess25/jskim/semantic_segmentation/U-net_colab/230712_cityscape_all_rgb.hdf5')
 
-source_path = '/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/230710source/'
+source_path = '/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/230712source/'
 X_test = np.load(os.path.join(source_path,'X_test.npy'))
 y_test = np.load(os.path.join(source_path,'y_test.npy'))
 with open(os.path.join(source_path, 'names_test.pkl'), 'rb') as f:
@@ -31,15 +31,22 @@ print("Mean IoU =", IOU_keras.result().numpy())
 #To calculate I0U for each class...
 values = np.array(IOU_keras.get_weights()).reshape(n_classes, n_classes)
 print(values)
-class1_IoU = values[0,0]/(values[0,0] + values[0,1] + values[0,2] + values[0,3] + values[1,0]+ values[2,0]+ values[3,0])
-class2_IoU = values[1,1]/(values[1,1] + values[1,0] + values[1,2] + values[1,3] + values[0,1]+ values[2,1]+ values[3,1])
-class3_IoU = values[2,2]/(values[2,2] + values[2,0] + values[2,1] + values[2,3] + values[0,2]+ values[1,2]+ values[3,2])
-class4_IoU = values[3,3]/(values[3,3] + values[3,0] + values[3,1] + values[3,2] + values[0,3]+ values[1,3]+ values[2,3])
+class1_IoU = values[0,0]/(values[0,:].sum() + values[:,0].sum() - values[0,0])
+class2_IoU = values[1,1]/(values[1,:].sum() + values[:,1].sum() - values[1,1])
+class3_IoU = values[2,2]/(values[2,:].sum() + values[:,2].sum() - values[2,2])
+class4_IoU = values[3,3]/(values[3,:].sum() + values[:,3].sum() - values[3,3])
+class5_IoU = values[4,4]/(values[4,:].sum() + values[:,4].sum() - values[4,4])
+
+# class1_IoU = values[0,0]/(values[0,0] + values[0,1] + values[0,2] + values[0,3] + values[1,0]+ values[2,0]+ values[3,0])
+# class2_IoU = values[1,1]/(values[1,1] + values[1,0] + values[1,2] + values[1,3] + values[0,1]+ values[2,1]+ values[3,1])
+# class3_IoU = values[2,2]/(values[2,2] + values[2,0] + values[2,1] + values[2,3] + values[0,2]+ values[1,2]+ values[3,2])
+# class4_IoU = values[3,3]/(values[3,3] + values[3,0] + values[3,1] + values[3,2] + values[0,3]+ values[1,3]+ values[2,3])
 
 print("IoU for background is: ", class1_IoU)
 print("IoU for vegetation is: ", class2_IoU)
 print("IoU for sidewalk is: ", class3_IoU)
 print("IoU for road is: ", class4_IoU)
+print("IoU for terrain is: ", class5_IoU)
 
 # plt.imshow(train_images[0, :,:,0], cmap='gray')
 # plt.imshow(train_masks[0], cmap='gray')
@@ -48,11 +55,11 @@ print("IoU for road is: ", class4_IoU)
 #model = get_model()
 #model.load_eights('???.hdf5') 
 
-prediction_path = '/bess25/jskim/semantic_segmentation/U-net_colab/result/230710predictions/array'
-figure_path = '/bess25/jskim/semantic_segmentation/U-net_colab/result/230710predictions/figure'
+prediction_path = '/bess25/jskim/semantic_segmentation/U-net_colab/result/230712predictions/array'
+figure_path = '/bess25/jskim/semantic_segmentation/U-net_colab/result/230712predictions/figure'
 for i in range(len(X_test)):
     test_img = X_test[i]
-    print(test_img)
+    # print(test_img)
     ground_truth=y_test[i]
     # test_img_norm=test_img[:,:,0][:,:,None]
     test_img_input = np.expand_dims(test_img, 0)

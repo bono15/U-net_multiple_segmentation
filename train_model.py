@@ -5,17 +5,17 @@ import pickle
 from matplotlib import pyplot as plt
 from simple_multi_unet_model import multi_unet_model
 
-n_classes=4
+n_classes=5
 
 if __name__ == '__main__':
     img_path  ="/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/image_RGB"
-    mask_path = "/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/mask_4classes"
+    mask_path = "/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/mask_5classes"
     data_loader = data_loader(img_path,mask_path)
     X_train,X_test,y_train,y_test,y_train_cat,y_test_cat,names_train,names_test = data_loader.dataload()
 
 
     # Save X_test, y_test
-    source_path = '/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/230710source/'
+    source_path = '/bess25/jskim/semantic_segmentation/U-net_colab/DLsource/230712source/'
     np.save(os.path.join(source_path, 'X_test.npy'), X_test)
     np.save(os.path.join(source_path, 'y_test.npy'), y_test)
 
@@ -41,7 +41,7 @@ if __name__ == '__main__':
                         # class_weight=class_weights, #이미지따라
                         shuffle=False)
                     
-    model.save('/bess25/jskim/semantic_segmentation/U-net_colab/230710_cityscape_all_rgb.hdf5')
+    model.save('/bess25/jskim/semantic_segmentation/U-net_colab/230712_cityscape_all_rgb.hdf5')
 
     #Evaluate the model
     _, acc = model.evaluate(X_test, y_test_cat)
@@ -57,7 +57,7 @@ if __name__ == '__main__':
     plt.xlabel('Epochs')
     plt.ylabel('Loss')
     plt.legend()
-    plt.savefig('/bess25/jskim/semantic_segmentation/U-net_colab/result/230710_cityscape_all_loss.png')
+    plt.savefig('/bess25/jskim/semantic_segmentation/U-net_colab/result/230712_cityscape_all_loss.png')
     plt.show()
 
     acc = history.history['accuracy']
@@ -69,6 +69,6 @@ if __name__ == '__main__':
     plt.xlabel('Epochs')
     plt.ylabel('Accuracy')
     plt.legend()
-    plt.savefig('/bess25/jskim/semantic_segmentation/U-net_colab/result/230710_cityscape_all_accuracy.png')
+    plt.savefig('/bess25/jskim/semantic_segmentation/U-net_colab/result/230712_cityscape_all_accuracy.png')
     plt.show()
 
